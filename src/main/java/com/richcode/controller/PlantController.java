@@ -26,6 +26,6 @@ public class PlantController {
 
         log.info("Request for plant search received with data : " + searchRequestDTO);
 
-        return plantService.searchPlants(searchRequestDTO.getText(), searchRequestDTO.getFields(), searchRequestDTO.getLimit());
+        return plantService.findAll();
     }
 }

@@ -1,6 +1,6 @@
 package com.richcode.repository;
 
-import com.richcode.search.repository.SearchRepository;
+import com.richcode.SearchRepository;
 import org.springframework.stereotype.Repository;
 import com.richcode.domain.Plant;
 @Repository

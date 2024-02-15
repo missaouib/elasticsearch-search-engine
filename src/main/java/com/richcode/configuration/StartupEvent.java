@@ -3,6 +3,7 @@ package com.richcode.configuration;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.hibernate.search.mapper.orm.Search;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -26,7 +27,7 @@ class StartupEvent implements ApplicationListener<ApplicationReadyEvent> {
     private void index() {
         final long start = System.currentTimeMillis();
         Search
-            .session(em)
+                .session(em.unwrap(Session.class))
             .massIndexer()
             .batchSizeToLoadObjects(100)
             .start()

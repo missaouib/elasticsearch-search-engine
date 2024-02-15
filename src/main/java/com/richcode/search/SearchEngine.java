@@ -6,6 +6,7 @@ import com.richcode.search.dto.search.Query;
 import com.richcode.search.query.SearchQueryBuilder;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
 import org.hibernate.search.mapper.orm.Search;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,7 +27,7 @@ public class SearchEngine<T> {
 
     @Transactional(propagation = Propagation.MANDATORY)
     public SearchResult<T> search(final Query<T> query) {
-        var res = SearchQueryBuilder.of(Search.session(em), query.clazz())
+        var res = SearchQueryBuilder.of(Search.session(em.unwrap(Session.class)), query.clazz())
             .filters(query.filters())
             .aggregators(query.aggregators())
             .sort(query.pageable().getSort(), query.sortFilters())
