@@ -1,7 +1,13 @@
-# demo-micro-admin-mono
+# demo-micro-front-mono
 
-This is a boilerplate code service that can be used when running RCM-MicroShop's ADMIN service in Monolithic mode.
-The code for the RCM-MicroShop platform is<https://github.com/rchemist/release-micro>It is open to the public.
+`RCM-MicroShop 플랫폼은 마이크로 서비스 플랫픔으로, 각 서비스 별 API 를 제공하며, JWT 토큰을 기반으로 한 인증을 지원합니다. 이 샘플 코드는 API를 사용하지 않고 직접 플랫폼 코드와 통합하는 SpringBoot 프로젝트입니다.`
+
+**boilerplate code that can be used when running RCM-MicroShop in Monolithic mode**
+
+-   For authentication, use SpringSecurity's default Authentication instead of JWT.
+-   Call service methods directly instead of RESTful API. (You can also use RESTful API by setting platform.config.webmvc.front=true.)
+
+`RCM-MicroShop 플랫폼의 코드는 https://github.com/rchemist/release-micro 에 공개되어 있습니다.`
 
 ## Developing services
 
@@ -9,7 +15,7 @@ The code for the RCM-MicroShop platform is<https://github.com/rchemist/release-m
 
 Download or fork this boilerplate code project and create a new project.
 
-_At this time, the original contents of the existing pom.xml file and MonolithicAdminApplication.java file must be maintained. (Additions are possible)_
+_At this time, the original contents of the existing pom.xml file and MonolithicFrontApplication.java file must be maintained. (Additions are possible)_
 
 <br>
 
@@ -18,158 +24,23 @@ _At this time, the original contents of the existing pom.xml file and Monolithic
 -   Add dependency to pom.xml<br>To add dependencies that have not been added to the existing project, add them through the dependency settings in pom.xml.
 -   Most useful libraries when developing web services, such as lombok, hibernate, and common-utils, have been added, so first check the dependency details in pom.xml and then add the necessary ones.
 -   Developing services<br>You can start development the exact same way you would develop any other project. However, before development`실행하기`Please be sure to read and understand the contents.
--   For reference, the built-in ADMIN site is developed with Vaadin.
 
 <br>
 
-### 3. Administrator tool settings
+### 3. Already reserved Controller Endpoint
 
-#### Login screen settings
+#### Built-in Controller Endpoint
 
--   The login screen setting property is a sub-element of platform.config.admin.view.login.\*.
+Built-in Controller can be activated through the following settings. (Default true)
 
-| item                               | property                        | Input example                                  | explanation                                                                                                                                              |
-| ---------------------------------- | ------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| login title                        | title                           | Rchemist Admin Console                         | Title displayed on login form                                                                                                                            |
-| Additional explanatory message     | description                     | Welcome to RCM MicroShop Admin Console!        | Explanatory text displayed at the bottom of the title                                                                                                    |
-| Login logo image                   | logoImage                       | ./image/login_logo.png                         | Logo image to display at the top of the login form. If you do not enter anything, nothing will be displayed, and it must be saved within 40px in height. |
-| Login form title                   | loginFormTitle                  | log in                                         | Text to be displayed at the top of the login input form                                                                                                  |
-| Retrieve password form title       | requestFormTitle                | find password                                  | Text to be displayed at the top of the password search input form                                                                                        |
-| ID label                           | labelUsername                   | id                                             | Explanatory text displayed at the bottom of the title                                                                                                    |
-| password label                     | labelPassword                   | password                                       | Explanatory text displayed at the bottom of the title                                                                                                    |
-| Retrieve password input form label | labelRequest                    | ID or email                                    | Explanatory text displayed at the bottom of the title                                                                                                    |
-| Login error title                  | errorLoginSubmitTitle           | I can't log in.                                | When login fails! Error title to be displayed with                                                                                                       |
-| Login error message                | errorLoginSubmitDescription     | Please verify your username or password again. | Login failure details                                                                                                                                    |
-| Password retrieval error title     | errorRequestSubmitTitle         | Your user information cannot be verified.      | When password recovery fails! Error title to be displayed with                                                                                           |
-| Password retrieval error message   | error RequestSubmit Description | Please check your ID or email again.           | Detailed explanation when password recovery fails                                                                                                        |
-| Login SUBMIT                       | buttonLoginText                 | log in                                         | Login input form SUBMIT button text                                                                                                                      |
-| Login link text                    | buttonLinkLoginText             | To the login screen                            | Link text when switching from the password search input form to the login input form                                                                     |
-| Find your password SUBMIT          | buttonRequestText               | find password                                  | Password search input form SUBMIT button text                                                                                                            |
-| Retrieve password link text        | buttonLinkRequestText           | Can't log in?                                  | Link text when switching from the login input form to the password input form                                                                            |
-| theme                              | theme                           | red                                            | Select a login screen theme. BLUE, LIGHT_BLUE, GREEN, LIGHT_GREEN, VIOLET, YELLOW, YELLOW_WHITE, HOT_PINK, RED, BLACK                                    |
+```yaml
+platform:
+  config:
+    webmvc:
+      front: true   # 기본값이 true
+```
 
--   login theme
-
-![로그인\_테마](./asset/login_theme.png)
-
-#### Change menu logo image
-
--   platform.config.admin.\*
-
-| item                                       | property        | Input example          |
-| ------------------------------------------ | --------------- | ---------------------- |
-| Logo image URL at the top of the menu      | view.logo-image | /images/logo.png       |
-| Logo image at the top of the menu ALT TEXT | view.logo-text  | Rchemist Admin Console |
-
-#### Dashboard bulletin board view settings
-
--   platform.config.admin.dashboard.board.\*
-
-| item                                            | property   | Input example             | explanation                                                                                                                                                                    |
-| ----------------------------------------------- | ---------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Bulletin board alias for inquiry                | alias      | notice, qna, free, report | If you enter the alias of a registered bulletin board, the latest posts from that bulletin board will be displayed on the dashboard.                                           |
-| Number of posts to display                      | row-size   | 3                         | The dashboard displays a set number of posts from each bulletin board.                                                                                                         |
-| Whether to display two bulletin boards per line | split-view | true                      | When displaying bulletin boards on the dashboard screen, select whether to display one bulletin board per line (false) or split them into two bulletin boards per line (true). |
-| Dashboard cache time (minutes)                  | refresh    | 5                         | Bulletin board data is searched at each set cache cycle.                                                                                                                       |
-
-#### Administrator tools menu settings
-
--   platform.config.admin.menu.\*
-
-| item               | property | Input example               | explanation                                                                                                                                                                                                                                                                                      |
-| ------------------ | -------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Available menu     | explicit | DASHBOARD, CUSTOMER, TENANT | Instead of the menu provided by default in the administrator tool, if you explicitly set a menu to use, only that menu will be displayed. The string that can be entered is the SectionType value defined in the SectionType class. If there are no settings, the entire menu will be displayed. |
-| Menu not available | exclude  | CUSTOMER, TENANT            | You can remove a menu designated as property from the administrator tools menu.                                                                                                                                                                                                                  |
-
-#### Administrator tool login security settings (OTP)
-
-If you enable the following option, you can use the 2-factor login function using the specified authentication method when logging in to the administrator tool.
-
--   platform.config.admin.notification.\*
-
-| item                             | property         | Input example        | explanation                                                                                                                                                                              |
-| -------------------------------- | ---------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| How to find your ID and password | find-id-password | EMAIL, SMS, KAKAO... | Set the type of message to send login information when retrieving the ID and password of the administrator tool. See io.rchemist.common.jpa.domain.type.NotificationType.type.           |
-| 2 Factor Login                   | two-factor-login | SMS, COCOA...        | Set what type of message the Secure code will be sent to when using the 2-factor login function in the administrator tool. See io.rchemist.common.jpa.domain.type.NotificationType.type. |
-
-<br>
-
-#### Administrator tools login security settings (MFA)
-
-Enabling the following option allows you to use MFA authentication when logging in to Administrator Tools.
-
--   platform.config.admin.security.mfa.\*
-
-| item                               | property      | Input example | explanation                                                                        |
-| ---------------------------------- | ------------- | ------------- | ---------------------------------------------------------------------------------- |
-| Whether to use MFA                 | force         | true          | Whether to use MFA when logging in to administrator tools; default value is false. |
-| MFA Code Algorithm                 | algorithm     | He got old 12 | Hashing algorithm for MFA issuance code. Default is SHA512                         |
-| MFA Code Length                    | digits-length | 12            | Length of the MFA issuance code. Default is 6                                      |
-| MFA Code validity period (seconds) | time-period   | 30            | The validity period (in seconds) of the MFA issuance code. Default is 15           |
-
-#### Administrator tool GRID settings
-
--   platform.config.admin.view.\*
-
-| item                                     | property           | Input example | explanation                                                                                                                                                        |
-| ---------------------------------------- | ------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| ListGrid Filter Mode                     | filter.type        | LAYER         | When displaying the detailed search filter of the list grid, whether to display it as a Div above the list (LAYER) or as a modal window (MODAL).                   |
-| How to display date in listgrid          | filter.date-format | DATETIME      | When displaying the date in the list of list grid, whether to display only the date (yyyy-MM-dd) (DATE) or both the date and time (yyyy-MM-dd HH:mm:ss) (DATETIME) |
-| How to display listgrid user information | grid.user-field    | loginName     | When displaying user information in the list of list grid, whether to show the login ID (loginName) or the user name (userName).                                   |
-
-#### Administrator tools menu (LNB) settings
-
-##### Show only specific menus
-
-You can set to display only specific menus among the menus provided in the administrator tool. In this case, all other menus that are not set will not be displayed.
-
--   platform.config.admin.menu.\*
-
-| item                 | property | Input example    | explanation                                                                                      |
-| -------------------- | -------- | ---------------- | ------------------------------------------------------------------------------------------------ |
-| Specify display menu | explicit | CUSTOMER,MILEAGE | Separate the SectionType.type values ​​you want to display with , and enter them without spaces. |
-
-##### Do not display specific menus
-
-You can set to not display certain menus among the menus provided in the administrator tool.
-
--   platform.config.admin.menu.\*
-
-| item                   | property | Input example    | explanation                                                                                      |
-| ---------------------- | -------- | ---------------- | ------------------------------------------------------------------------------------------------ |
-| Specify exclusion menu | exclude  | CUSTOMER,MILEAGE | Separate the SectionType.type values ​​you want to exclude with , and enter them without spaces. |
-
-_If you set a menu set to explicit to exclude, the menu will not be visible._
-
-#### Member management function settings
-
-You can set the Admin Tools > Membership Management function.
-
--   platform.config.customer.create.admin.\*
-
-| item                                    | property | Input example               | explanation                                                                                                                                                                                                                                                                                          |
-| --------------------------------------- | -------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Create member<br/>Whether or not to use | enabled  | false                       | Whether to use the member creation function in the administrator tool (true) or not (false)<br/>Default is false                                                                                                                                                                                     |
-| When creating a member<br/>field used   | fields   | loginName<br/>,emailAddress | Explicitly specify fields to use when creating members in the administrator tool<br/>There is no default value, and if this value does not exist, the default value of CustomerCreateForm is used.<br/>However, loginName and emailAddress are added unconditionally even if they are not specified. |
-
--   platform.config.admin.view.customer.list.\*
-
-| item                     | property        | Input example | explanation                                                                                        |
-| ------------------------ | --------------- | ------------- | -------------------------------------------------------------------------------------------------- |
-| Activate hidden function | hidden-customer | true          | Whether to use the hidden member function in administrator tool member management. (default false) |
-
-#### etc
-
--   platform.config.admin.\*
-
-| item                       | property           | Input example | explanation                                                                                                                           |
-| -------------------------- | ------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Whether metadata is cached | metadata.cacheable | true          | Whether to cache administrator tool metadata. Must be set to true on operating systems. (default true)                                |
-| site name                  | site-name          | RCHEMIST      | Site name used in the administrator tool application. (no default). Used when sending a message or displaying the site name in the UI |
-
-### 4. Already reserved Controller Endpoint
-
-The following endpoint URL is already in use inside the platform. The URL below cannot be used during further development.
+If this setting is enabled, the endpoint URL below is already in use inside the platform and cannot be used in further development.
 
 **(Important) If you develop an endpoint with that URL, the service will not run.**
 
@@ -187,9 +58,9 @@ You can check the actual source code by opening the project in the IDE and explo
     -   io.rchemist.cms.page.controller.PageController
     -   io.rchemist.cms.page.controller.PageFieldController
 -   /commerce/\*\*
-    -   It is not supported by community projects, but the corresponding endpoint URL cannot be used.
+    -   It is not supported by community projects, but use of this endpoint URL is prohibited.
 -   /event/\*\*
-    -   It is not supported in monolithic service mode, but the corresponding endpoint URL cannot be used.
+    -   It is not supported in monolithic service mode, but use of the corresponding endpoint URL is prohibited.
 -   /tenant/\*\*
     -   io.rchemist.tenant.controller.TenantController
     -   io.rchemist.tenant.security.AdminUserAuthenticationController
@@ -200,6 +71,12 @@ You can check the actual source code by opening the project in the IDE and explo
     -   io.rchemist.tenant.translate.TranslateController
 
 <br>
+
+`회원 가입 / 로그인을 구현할 때 CustomerAuthenticationController 를 참고하시기 바랍니다.`
+
+<br>
+
+**if`platform.config.webmvc.front`If the value is set to false, all Front Controllers provided by the RCM MicroShop platform will not be registered as beans, and Endpoints will not be added. However, all other beans such as Service/Dao operate normally, so if you want to develop Front View independently, you can set this value to false.**
 
 <br>
 
@@ -224,7 +101,6 @@ The RCM Micro-Shop platform was developed with the following technologies:
 -   Elasticsearch 7.15.2
 -   MongoDB 5
 -   mysql 5.8+
--   Vaadin 22+
 
 ...
 
@@ -256,14 +132,14 @@ In the repository settings of the project root pom, you must register the reposi
 
 <br>
 
-#### 2) micro-admin-mono dependency 추가
+#### 2) micro-front-mono dependency 추가
 
-micro-admin-mono is a service dependency that bundles each microservice of RCM-MicroShop into one for convenient use in monolithic mode and then embeds the Admin site, including the ADMIN project.
+micro-front-mono is a project that bundles each microservice of RCM-MicroShop into one for convenient use in monolithic mode.
 
     <dependencies>
         <dependency>
           <groupId>io.rchemist</groupId>
-          <artifactId>micro-admin-mono</artifactId>
+          <artifactId>micro-front-mono</artifactId>
           <exclusions>
             <exclusion>
               <groupId>org.springframework.cloud</groupId>
@@ -289,7 +165,11 @@ micro-admin-mono is a service dependency that bundles each microservice of RCM-M
         </dependency>
       </dependencies>
 
-_When adding micro-admin-mono as a dependency, you must add settings related to spring cloud as exclusion. This is to prevent it from operating in microservice mode._
+_When adding micro-front-mono as a dependency, you must add settings related to spring cloud as exclusion. This is to prevent it from operating in microservice mode._
+
+There is also micro-admin-mono, which corresponds to Admin instead of Front.
+
+You can use it in the same way when configuring the Admin service. An example for this is<https://github.com/rchemist/demo-micro-shop>You can check it here.
 
 <br>
 
@@ -320,6 +200,16 @@ Add the following syntax to the build script so that a jar file for distribution
 This setting allows projects created with SpringBoot to be built as fat jars and run independently.
 
 <br>
+
+#### 4) micro-front-mono 의 RCM Micro-Shop dependencies
+
+-   cloud-common
+    Shared resource management of microservices.
+-   micro-asset
+    Asset data management<br>File Upload Download and AssetView
+-   micro-cms<br>notice board<br>Community (Group)<br>CMS-related services such as pages
+-   micro-customer<br>Front member service
+-   micro-tenant<br>Admin related services<br>Admin member<br>Administrator tool-related services such as security, custom fields, and custom options
 
 ### 4. Application yml settings
 
@@ -525,6 +415,22 @@ For further details on each option that can be set, please refer to the descript
 
 <br>
 
+### 5. Run Monolithic Front Application
+
+Run MonolithicFrontApplication.
+
+#### 1) Execute Class Transform
+
+The RCM platform uses ClassTransform technology to change Class in Runtime ClassLoader. ClassTransform must be performed when a SpringBoot application runs.
+
+    PlatformClassTransformHelper.initializeDefaultTransformedClasses();
+
+If application.run() is performed without this code being executed, the application will not run.
+
+For more details, please refer to io.rchemist.front.MonolithicFrontApplication.java.
+
+<br>
+
 #### 2) Service execution environment settings
 
 The service execution environment is classified as follows, and each overrides yml settings in addition to application.yml settings.
@@ -572,10 +478,10 @@ If the following message is output as a result of execution, it is completed nor
 
 Before executing, be sure to check whether the jar is a fat jar.<br>(The file must be at least 1~200 MB)
 
-Basically, you just need to run java -jar demo-micro-admin-mono-0.0.1-SNAPSHOT.jar. However, if you do this, all class paths will continue to be searched when the spring boot jar file is loaded, making SpringBoot startup very slow.
+Basically, you just need to run java -jar demo-micro-front-mono-0.0.1-SNAPSHOT.jar. However, if you do this, all class paths will continue to be searched when the spring boot jar file is loaded, making SpringBoot startup very slow.
 
-To avoid this problem, use the following syntax:
+To avoid this problem, you can use the following syntax:
 
 ```shell
-java -jar -Xverify:none -XX:TieredStopAtLevel=1 demo-micro-admin-mono-0.0.1-SNAPSHOT.jar
+java -jar -Xverify:none -XX:TieredStopAtLevel=1 demo-micro-front-mono-0.0.1-SNAPSHOT.jar
 ```
